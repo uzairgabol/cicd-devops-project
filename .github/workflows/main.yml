@@ -41,4 +41,4 @@ jobs:
       - name: Build Docker image
         if: success() && github.event_name == 'push'
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-app:latest .
+          docker build -t test/flask-app:latest .
