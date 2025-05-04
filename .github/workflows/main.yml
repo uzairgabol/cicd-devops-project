@@ -31,14 +31,6 @@ jobs:
         run: |
           pytest
 
-      - name: Docker Setup
-        uses: docker-practice/actions-setup-docker@master
-        timeout-minutes: 12
-      - run: |
-          set -x
-          docker version
-          docker run --rm hello-world
-
       # - name: Log in to Docker Hub
       #   if: success() && github.event_name == 'push'
       #   uses: docker/login-action@v3
