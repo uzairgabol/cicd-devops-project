@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-  id-token: write
-  packages: write
-  actions: write
 
 jobs:
   test-build-push:
@@ -75,5 +70,5 @@ jobs:
       - name: Trigger Deployment
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           event-type: trigger-deployment
