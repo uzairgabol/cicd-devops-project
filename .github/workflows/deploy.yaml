@@ -41,5 +41,34 @@ jobs:
             
             # Pull and run the new container
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
-            docker run -d --name flask-container -p 5000:5000 ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+            
+            # Run with interactive flag to see output and set restart policy
+            docker run -d --name flask-container \
+              -p 5000:5000 \
+              --restart unless-stopped \
+              ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+            
+            # Check container status and logs
+            echo "==== CONTAINER STATUS ===="
+            docker ps -a | grep flask-container
+            
+            echo "==== CONTAINER LOGS ===="
+            docker logs flask-container
+          EOF
+      
+      - name: Check Container Health
+        run: |
+          sleep 10  # Give container time to start fully
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+            echo "==== CONTAINER STATUS AFTER 10 SECONDS ===="
+            docker ps -a | grep flask-container
+            
+            echo "==== RECENT LOGS ===="
+            docker logs --tail 20 flask-container
+            
+            echo "==== CONTAINER INSPECT ===="
+            docker inspect flask-container | grep -A 10 "State"
+            
+            echo "==== HOST PORT CHECK ===="
+            netstat -tulpn | grep 5000 || echo "No process listening on port 5000"
           EOF
