@@ -56,5 +56,10 @@ def get_all_items():
     return jsonify(data_store)
 
 
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
+
 if __name__ == "__main__":
     app.run(debug=True, host=host, port=port)
