@@ -27,7 +27,7 @@ def test_create_duplicate_item(client):
 
 
 def test_get_item(client):
-    client.post("/item", json={"id": "3", "name": "Item 3"})
+    client.post("/item", json={"id": "3", "name": "Item 2"})
     res = client.get("/item/3")
     assert res.status_code == 200
     assert res.get_json()["name"] == "Item 3"
